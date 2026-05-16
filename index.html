@@ -1,0 +1,534 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCA 2023 -25 | SanStudio</title>
+<meta property="og:title" content="MCA 2023 -25">
+<meta property="og:description" content="Wedding gallery by San — SanStudio">
+<meta property="og:image" content="https://lh3.googleusercontent.com/d/1lMBQMaRGBzI9YtD6Z-D8UEijyjL25sve">
+<meta name="twitter:card" content="summary_large_image">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Inter', sans-serif; }
+.serif { font-family: 'Playfair Display', serif; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.gallery-columns { column-count: 1; column-gap: 12px; }
+@media (min-width: 640px) { .gallery-columns { column-count: 2; } }
+@media (min-width: 1024px) { .gallery-columns { column-count: 3; } }
+.gallery-item { break-inside: avoid; margin-bottom: 12px; }
+.fade-overlay { background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.55) 100%); }
+.tab-active { border-bottom: 2px solid #000; color: #000; }
+.zoom-active { transform: scale(1.5); cursor: zoom-out; }
+.liked { color: #ef4444 !important; fill: #ef4444; stroke: #ef4444; }
+.checkbox-ring { width: 24px; height: 24px; border: 2px solid white; border-radius: 50%; background-color: rgba(0,0,0,0.2); transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+.checkbox-ring.selected { background-color: #2563eb; border-color: #2563eb; }
+body.dark { background:#111; color:#f5f5f5; }
+body.dark .bg-white { background:#1a1a1a !important; }
+body.dark .border-zinc-100, body.dark .border-zinc-200 { border-color: #333 !important; }
+body.dark .text-zinc-900 { color:#f5f5f5 !important; }
+body.dark .text-zinc-400 { color:#888 !important; }
+
+</style>
+</head>
+<body class="text-zinc-900 selection:bg-black selection:text-white">
+
+
+
+<header class="relative h-screen w-full flex items-center justify-center overflow-hidden">
+  <img id="hero-img" src="https://lh3.googleusercontent.com/d/1lMBQMaRGBzI9YtD6Z-D8UEijyjL25sve" class="absolute inset-0 w-full h-full object-cover" alt="MCA 2023 -25">
+  <div class="absolute inset-0 fade-overlay"></div>
+  <div class="relative z-10 text-center text-white px-4">
+    <p class="text-[10px] md:text-xs tracking-[0.2em] mb-4 opacity-80 uppercase">16-05-2026/ ERODE</p>
+    <h1 class="text-3xl md:text-6xl lg:text-7xl serif tracking-wider mb-6 uppercase">MCA 2023 -25</h1>
+    <div class="text-[10px] md:text-xs tracking-widest opacity-70 flex flex-col md:flex-row items-center justify-center gap-2 md:gap-4 uppercase">
+      <a href="https://sanstudio-hub.github.io/in/" target="_blank" class="hover:text-white hover:underline underline-offset-4 transition-all">San</a>
+      <span class="hidden md:block">|</span>
+      <a href="https://sanstudio-hub.github.io/in/" target="_blank" class="underline underline-offset-4">By SanStudio</a>
+    </div>
+  </div>
+  <div class="absolute bottom-10 left-1/2 -translate-x-1/2 text-white animate-bounce cursor-pointer" onclick="document.getElementById('gallery-section').scrollIntoView({behavior:'smooth'})">
+    <i data-lucide="chevron-down" class="w-6 h-6"></i>
+  </div>
+</header>
+
+<div id="gallery-section" class="sticky top-0 z-50 bg-white border-b border-zinc-100 px-4 md:px-10 py-3 flex justify-between items-center">
+  <div class="flex gap-6 md:gap-8 overflow-x-auto no-scrollbar">
+    
+    <button onclick="switchTab('CAM 01')" class="text-[10px] font-bold tracking-widest uppercase pb-2 transition-all tab-btn tab-active" id="tab-0">CAM 01</button>
+  
+  </div>
+  <div class="flex items-center gap-4 md:gap-6 relative">
+    <div class="flex items-center gap-1 group cursor-pointer" onclick="filterLikes()">
+      <button id="nav-heart"><i data-lucide="heart" class="w-4 h-4"></i></button>
+      <span id="like-count" class="text-[10px] font-bold">0</span>
+    </div>
+    
+    <button onclick="exportFavoritesCSV()" class="hover:opacity-60 transition-opacity" title="Export Favorites CSV">
+      <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+    </button>
+  
+    
+    <button onclick="toggleDarkMode()" id="dark-toggle" class="hover:opacity-60 transition-opacity" title="Toggle Dark Mode">
+      <i data-lucide="moon" class="w-4 h-4" id="dark-icon"></i>
+    </button>
+  
+    <button onclick="openShareModal()" class="hover:opacity-60 transition-opacity"><i data-lucide="send" class="w-4 h-4"></i></button>
+    <button onclick="openContactModal()" class="hover:opacity-60 transition-opacity"><i data-lucide="message-circle" class="w-4 h-4"></i></button>
+    <div class="relative">
+      <button id="download-trigger" onclick="toggleDownloadMenu()" class="hidden md:flex items-center gap-2 border border-zinc-900 px-4 py-1.5 rounded-sm text-[10px] font-bold tracking-widest uppercase hover:bg-black hover:text-white transition-all">
+        Download Files <i data-lucide="chevron-down" class="w-3 h-3"></i>
+      </button>
+      <div id="download-menu" class="absolute right-0 top-full mt-2 w-56 bg-white rounded-lg shadow-xl border border-zinc-100 hidden flex-col overflow-hidden z-[60]">
+        <button onclick="startSelectionMode()" class="text-left px-4 py-3 text-xs font-medium hover:bg-zinc-50 border-b border-zinc-50 w-full flex items-center gap-2">
+          <i data-lucide="check-square" class="w-3 h-3"></i> Select photos
+        </button>
+        <button onclick="downloadAllInTab()" class="text-left px-4 py-3 text-xs font-medium hover:bg-zinc-50 w-full flex items-center gap-2">
+          <i data-lucide="download-cloud" class="w-3 h-3"></i> Download all <span id="current-tab-name">CAM 01</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<main class="bg-white min-h-screen">
+  <div class="py-12 text-center">
+    <h2 class="text-xs font-bold tracking-[0.4em] uppercase serif" id="gallery-subtitle">MCA 2023 -25</h2>
+    <div id="selection-instructions" class="hidden mt-4">
+      <p class="text-xs text-zinc-500 bg-zinc-100 inline-block px-4 py-2 rounded-full">Click photos to select them for download</p>
+    </div>
+  </div>
+  <div class="max-w-[1600px] mx-auto px-4 md:px-10 pb-24">
+    <div id="photo-grid" class="gallery-columns"></div>
+  </div>
+</main>
+
+<div id="selection-bar" class="fixed bottom-0 left-0 right-0 z-[70] bg-white border-t border-zinc-200 p-4 transform translate-y-full transition-transform duration-300 shadow-[0_-5px_20px_rgba(0,0,0,0.1)]">
+  <div class="max-w-4xl mx-auto flex justify-between items-center">
+    <div class="flex items-center gap-4">
+      <button onclick="cancelSelectionMode()" class="p-2 hover:bg-zinc-100 rounded-full"><i data-lucide="x" class="w-5 h-5"></i></button>
+      <div class="flex flex-col">
+        <span class="text-sm font-bold"><span id="selected-count">0</span> Selected</span>
+        <button onclick="selectAll()" class="text-[10px] text-zinc-500 hover:text-black underline text-left">Select All</button>
+      </div>
+    </div>
+    <button onclick="downloadSelectedBatch()" class="bg-black text-white px-6 py-2 rounded-lg text-xs font-bold uppercase tracking-widest hover:bg-zinc-800">Download Selected</button>
+  </div>
+</div>
+
+<div class="fixed bottom-6 right-6 z-[60]" id="chat-bubble">
+  <button onclick="openContactModal()" class="bg-black text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform">
+    <i data-lucide="message-square" class="w-6 h-6"></i>
+  </button>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" class="fixed inset-0 z-[100] bg-white hidden flex-col">
+  <div class="flex justify-between items-center p-6 border-b border-zinc-50">
+    <div id="lb-counter" class="text-[10px] font-bold tracking-widest uppercase text-zinc-400"></div>
+    <div class="flex items-center gap-6">
+      <button id="lb-heart-btn" onclick="toggleLikeCurrent()"><i data-lucide="heart" class="w-5 h-5 cursor-pointer"></i></button>
+      <button onclick="downloadCurrent()"><i data-lucide="download" class="w-5 h-5 cursor-pointer hover:opacity-50"></i></button>
+      <i data-lucide="x" class="w-6 h-6 cursor-pointer hover:rotate-90 transition-transform" onclick="closeLightbox()"></i>
+    </div>
+  </div>
+  <div class="flex-1 relative flex items-center justify-center p-4">
+    <button onclick="changePhoto(-1)" class="absolute left-6 p-4 hover:bg-zinc-50 rounded-full"><i data-lucide="chevron-left"></i></button>
+    <img id="lb-img" src="" class="max-w-full max-h-[80vh] object-contain transition-transform" onclick="toggleZoom()">
+    <button onclick="changePhoto(1)" class="absolute right-6 p-4 hover:bg-zinc-50 rounded-full"><i data-lucide="chevron-right"></i></button>
+  </div>
+</div>
+
+<!-- SHARE MODAL -->
+<div id="share-modal" class="fixed inset-0 z-[110] bg-black/60 hidden items-center justify-center backdrop-blur-sm" onclick="closeShareModal(event)">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6 relative" id="share-modal-content" onclick="event.stopPropagation()">
+    <button onclick="closeShareModal()" class="absolute top-4 right-4"><i data-lucide="x-circle" class="w-6 h-6 text-zinc-300"></i></button>
+    <h3 class="text-xl font-medium text-center mb-6">Share Album</h3>
+    <input type="text" id="share-url-input" class="w-full border border-zinc-200 rounded-lg px-4 py-3 text-sm bg-zinc-50 mb-4" readonly value="https://yourdomain.com/album">
+    <button onclick="copyShareLink()" class="w-full bg-black text-white rounded-lg py-3 font-medium flex items-center justify-center gap-2 hover:bg-zinc-800 mb-6">
+      <i data-lucide="link" class="w-4 h-4"></i> <span id="copy-btn-text">Copy Link</span>
+    </button>
+    <div class="flex items-center justify-center gap-6">
+      <a href="#" id="share-wa" target="_blank" class="hover:scale-110 transition-transform"><svg class="w-8 h-8 text-[#25D366]" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a>
+      <a href="#" id="share-tg" target="_blank" class="hover:scale-110 transition-transform"><svg class="w-8 h-8 text-[#26A5E4]" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 11.944 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.638z"/></svg></a>
+      <a href="#" id="share-fb" target="_blank" class="hover:scale-110 transition-transform"><svg class="w-8 h-8 text-[#1877F2]" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT MODAL -->
+<div id="contact-modal" class="fixed inset-0 z-[120] bg-black/60 hidden items-center justify-center backdrop-blur-sm" onclick="closeContactModal(event)">
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-sm p-8 relative text-center" id="contact-modal-content" onclick="event.stopPropagation()">
+    <button onclick="closeContactModal()" class="absolute top-4 right-4 text-zinc-300"><i data-lucide="x-circle" class="w-6 h-6"></i></button>
+    <div class="w-24 h-24 rounded-full mx-auto mb-4 overflow-hidden shadow-inner">
+      <img src="" alt="Profile" class="w-full h-full object-cover">
+    </div>
+    <h3 class="text-2xl font-bold mb-1">SanStudio</h3>
+    <p class="text-sm text-zinc-500 font-medium mb-4">Nothing</p>
+    <p class="text-xl font-medium mb-1">+91 900000000</p>
+    <p class="text-sm text-zinc-500 mb-6">nothing Sir/Mam</p>
+    <div class="space-y-3 mb-6">
+      <a href="https://wa.me/" target="_blank" class="flex items-center justify-center gap-2 w-full border border-zinc-200 rounded-lg py-2.5 hover:bg-zinc-50 font-medium text-sm text-zinc-700">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.008-.57-.008-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        WhatsApp
+      </a>
+      <a href="https://t.me/" target="_blank" class="flex items-center justify-center gap-2 w-full border border-zinc-200 rounded-lg py-2.5 hover:bg-zinc-50 font-medium text-sm text-zinc-700">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 11.944 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.638z"/></svg>
+        Telegram
+      </a>
+      <a href="https://www.instagram.com/santhosh_747_dark/" target="_blank" class="flex items-center justify-center gap-2 w-full border border-zinc-200 rounded-lg py-2.5 hover:bg-zinc-50 font-medium text-sm text-zinc-700">
+        <i data-lucide="instagram" class="w-4 h-4"></i> Instagram
+      </a>
+      <a href="https://" target="_blank" class="flex items-center justify-center gap-2 w-full border border-zinc-200 rounded-lg py-2.5 hover:bg-zinc-50 font-medium text-sm text-zinc-700">
+        <i data-lucide="youtube" class="w-4 h-4"></i> YouTube
+      </a>
+      <button onclick="saveContact()" class="flex items-center justify-center gap-2 w-full bg-black text-white rounded-lg py-3 hover:bg-zinc-800 font-bold text-sm">Save Contact</button>
+    </div>
+    <a href="https://sanstudio-hub.github.io/in/" target="_blank" class="text-sm underline underline-offset-4 text-zinc-500 hover:text-black">Developed by San</a>
+  </div>
+</div>
+
+<footer class="bg-zinc-900 text-white py-8 text-center">
+  <p class="text-xs tracking-widest opacity-50 uppercase">MCA 2023 -25 — SanStudio</p>
+  <p class="text-xs mt-2 opacity-30">
+    <a href="https://a-santhosh-hub.github.io/in/" target="_blank" class="hover:opacity-60 transition-opacity">Developed by San</a>
+  </p>
+</footer>
+
+<script>
+const ALBUM_DATA = {
+  "cam02": [{"id":"1ut9meO0lDt3HZq2BLBTV8gVM3l3mIYNe","name":"Photo 01"},{"id":"1NpYP9onsxJHcAxN8kpMG-hsXyGZhQN0l","name":"Photo 02"},{"id":"1q_6iRghTQrke7sSvKmr1k4RT32urhRx9","name":"Photo 03"},{"id":"1BzwmShXUDVnBdLsQLvSxsJS7sChrykuU","name":"Photo 04"},{"id":"1zl0_aNwmn7TjC88L_pYAs040yIKPLudz","name":"Photo 05"},{"id":"1Q4lAAP0umSh9InNJpiiokpQ7kRQ6ynVL","name":"Photo 06"},{"id":"1CeMWDe4356aRW1wj08wyNQBgpQRbm09R","name":"Photo 07"},{"id":"1uNiFa3jMyUmVE25yoLvzWXrqhleFSA2d","name":"Photo 08"},{"id":"1We2qSmGhL0EEpz8oH2XjW2qm8FuJACgQ","name":"Photo 09"},{"id":"1PR8GgGXcM3Uh3rBrC7pR6esbO0FA4E7r","name":"Photo 10"},{"id":"1DelfeoPx-uz8mPmJZ-Kouwyjeu0vs7XA","name":"Photo 11"},{"id":"179-7-cnBDYdL8VDyyPGMo8R_NdIrunkp","name":"Photo 12"},{"id":"1Ygw9Gc1F2sjgoR2Cy-C8u0HBpcHKV6yf","name":"Photo 13"},{"id":"1hM22-yuGkSWpRnb4kP43HMjnbi9xU2cD","name":"Photo 14"},{"id":"14ZcDQqvW70J2uwSCwcSzeghh7hU8_kKO","name":"Photo 15"},{"id":"1BmIN6LKX3Fes9LXz3Ld0LtqScd59Rxoh","name":"Photo 16"},{"id":"1n8SA_bUaBrT4vfuH0Lv2d85QzVuurGf7","name":"Photo 17"},{"id":"158nQtkKljpog9PwOYuABx7z8YiLzGKFX","name":"Photo 18"},{"id":"1F0h_bBRim0SFtRFPt9p45_UZI9q8eud2","name":"Photo 19"},{"id":"1g0fgfWCG7ybNBvk2VUsQj8dNw4qSujYK","name":"Photo 20"},{"id":"1VuHhESomfVf7aEPSGe-tIicQnICUm_1p","name":"Photo 21"},{"id":"1-osLMmQm4uMzdVVPAhGbNNAS5jIVfFzq","name":"Photo 22"},{"id":"1SYiK_SGnY3McxpuRmL-SrFubj52PftxT","name":"Photo 25"},{"id":"1yFJvO6T4i-L9I3T7pkMX9Kpdt1-2tIum","name":"Photo 26"},{"id":"1lSQb5Ls1f-XLlSxEEUutHzSYcCM0iejG","name":"Photo 27"},{"id":"18R4m4seYBMhsgad2EphFsJN8IVvJnDN1","name":"Photo 28"},{"id":"1ppId9cn2p9-18Kg2AiI840xLLhZO_mdy","name":"Photo 29"},{"id":"11IxHW5Uc10eASb3zPdHlwz11zpqiWxA7","name":"Photo 30"},{"id":"1F0TM5K6hSeCYHFRUkOAk31Rulyyww6yB","name":"Photo 31"},{"id":"1FSuycPIBl_chN9jNu7MjBjR8AT5rXQfW","name":"Photo 32"},{"id":"14JBHmiyuNIzA-ALctKJsPmKytM72nZcg","name":"Photo 33"},{"id":"1aWzhEF2nicy5cA0KaN-kmRHVLHBtlTJt","name":"Photo 34"},{"id":"1z-LYzQx0X_nA97t_N7gmEOnYsPz2Ysnj","name":"Photo 35"},{"id":"1B9naVW9pyf--UZ1Sh6AIo8phI9C07CaC","name":"Photo 36"},{"id":"1r8F6MV0HLoqBpV4Y6IUoH5fW4tbGLanV","name":"Photo 37"},{"id":"1iSDIcflO8g3LzalBaD089E-lUDqklDtw","name":"Photo 38"},{"id":"1_DSM644FIMOCQoluZ8NRDVgTIqu-9_K4","name":"Photo 39"},{"id":"1ON_MmGd2DSgOe1pKNHnHUxOwnIBSETQP","name":"Photo 40"},{"id":"1a6JHD3zEeGtzo2W6J5yRbAVe-HRYMI4f","name":"Photo 41"},{"id":"1wbL8vOZd_Z4Qbdfbc80PwdutLJ6SxIjh","name":"Photo 42"},{"id":"1cc5uJnA6KPGl9A6zvhk3X3wH3RGm83Hs","name":"Photo 43"},{"id":"16RiOI4hzVMco2HeKB8h5SRG8uowiwVSO","name":"Photo 44"},{"id":"1yRgB_yzIz6EUQG1bnzyjUETyUIjyeY6P","name":"Photo 45"},{"id":"1jR9pFiNJDKkBmwKAmbj-agTgQ3onxKgr","name":"Photo 46"},{"id":"1onDFt5Ya-5ilHwnJjfZ_Lsyz99A6ZKXL","name":"Photo 47"},{"id":"1tahnJpPDrzmM7N9ZSXT5poYFiuwXcWMC","name":"Photo 48"},{"id":"174DHMxGUVx3oX3c9InhIWs16LgZeP8xV","name":"Photo 49"},{"id":"1PE-9ztGo1sOKB1WRor-43cUSqdoO8xS3","name":"Photo 50"},{"id":"1JyFYWqz11cDi2Z6VGNIUCdq6NLkP7cJZ","name":"Photo 51"},{"id":"14hdgWqLmA7dKJgPklqd9cAX6AvjSlacS","name":"Photo 52"},{"id":"1oiZia7oj2Ds1vnlLwkNa2OA6IeobJv0N","name":"Photo 53"},{"id":"1Nsm2i0a3XmzzZ1BbqQwprhFApw_biIQS","name":"Photo 54"},{"id":"13ngN4MmNUyM_n3lApl-0t_tQG_dKaKI4","name":"Photo 55"},{"id":"1y5xOFgK5yB4ADHgDS1Rbzj9nJmsI5rHP","name":"Photo 56"},{"id":"10HWFTBXu5kLjC_uH4EkUVU0B023tWIwe","name":"Photo 57"},{"id":"1lMBQMaRGBzI9YtD6Z-D8UEijyjL25sve","name":"Photo 58"},{"id":"1NYsAzgm98H-D8qRROmJ5GEKnXXiUzYi7","name":"Photo 59"},{"id":"1IwQ0abnwI9CMjhfyDy905Xd52ro1oXYo","name":"Photo 60"},{"id":"1YGFj6hAo8UaqZlZvwz1nN93QC9en5sLG","name":"Photo 61"},{"id":"17LLTHOjuCLSQmXmIfttWB2PIh9wb0F9N","name":"Photo 62"},{"id":"1rV1K3iuEYoq0QA5Yigcs3YrZC3HNmGUq","name":"Photo 63"},{"id":"1-nZtUU8lxR_L5cB9cVVVHkYmdyIDm5fd","name":"Photo 64"},{"id":"1x4UY3uLLUFybgxowza_e2U-nTa9JLhCV","name":"Photo 65"},{"id":"1LP-KBVeNrmrfQY8LERic0SRKnf-syhPa","name":"Photo 66"},{"id":"1CZLJGya2G_xE_NXKX4FLs1bAoqyAEvKo","name":"Photo 67"},{"id":"1U5AmWEINOnngEeLobdUYrZ8XQGSTeyrp","name":"Photo 68"},{"id":"1I07Psv7QGLFWYqCwE79-9xQm0VVnpqkN","name":"Photo 69"},{"id":"1rvzSujL01Tb-mD4JkQ4DGt5g0lQUwccj","name":"Photo 70"},{"id":"1k-v3yNVH8ptp04eEcFo5LkTYPyEt9L6S","name":"Photo 71"},{"id":"1c7cPOmOO7P0afCVZzYWB0qnlpfOsEQvl","name":"Photo 72"}]
+};
+
+const getDriveUrl = (id) => 'https://lh3.googleusercontent.com/d/' + id;
+const getDownloadUrl = (id) => 'https://drive.google.com/uc?export=download&id=' + id;
+
+let currentTab = 'CAM 01';
+let currentIndex = 0;
+let isZoomed = false;
+let likedPhotos = new Set(JSON.parse(localStorage.getItem('album_likes') || '[]'));
+let isSelectionMode = false;
+let selectedPhotos = new Set();
+
+function getTabData(tab) {
+  const cam = [{"id":"cam02","label":"CAM 01","photos":[{"id":"1ut9meO0lDt3HZq2BLBTV8gVM3l3mIYNe","name":"Photo 01"},{"id":"1NpYP9onsxJHcAxN8kpMG-hsXyGZhQN0l","name":"Photo 02"},{"id":"1q_6iRghTQrke7sSvKmr1k4RT32urhRx9","name":"Photo 03"},{"id":"1BzwmShXUDVnBdLsQLvSxsJS7sChrykuU","name":"Photo 04"},{"id":"1zl0_aNwmn7TjC88L_pYAs040yIKPLudz","name":"Photo 05"},{"id":"1Q4lAAP0umSh9InNJpiiokpQ7kRQ6ynVL","name":"Photo 06"},{"id":"1CeMWDe4356aRW1wj08wyNQBgpQRbm09R","name":"Photo 07"},{"id":"1uNiFa3jMyUmVE25yoLvzWXrqhleFSA2d","name":"Photo 08"},{"id":"1We2qSmGhL0EEpz8oH2XjW2qm8FuJACgQ","name":"Photo 09"},{"id":"1PR8GgGXcM3Uh3rBrC7pR6esbO0FA4E7r","name":"Photo 10"},{"id":"1DelfeoPx-uz8mPmJZ-Kouwyjeu0vs7XA","name":"Photo 11"},{"id":"179-7-cnBDYdL8VDyyPGMo8R_NdIrunkp","name":"Photo 12"},{"id":"1Ygw9Gc1F2sjgoR2Cy-C8u0HBpcHKV6yf","name":"Photo 13"},{"id":"1hM22-yuGkSWpRnb4kP43HMjnbi9xU2cD","name":"Photo 14"},{"id":"14ZcDQqvW70J2uwSCwcSzeghh7hU8_kKO","name":"Photo 15"},{"id":"1BmIN6LKX3Fes9LXz3Ld0LtqScd59Rxoh","name":"Photo 16"},{"id":"1n8SA_bUaBrT4vfuH0Lv2d85QzVuurGf7","name":"Photo 17"},{"id":"158nQtkKljpog9PwOYuABx7z8YiLzGKFX","name":"Photo 18"},{"id":"1F0h_bBRim0SFtRFPt9p45_UZI9q8eud2","name":"Photo 19"},{"id":"1g0fgfWCG7ybNBvk2VUsQj8dNw4qSujYK","name":"Photo 20"},{"id":"1VuHhESomfVf7aEPSGe-tIicQnICUm_1p","name":"Photo 21"},{"id":"1-osLMmQm4uMzdVVPAhGbNNAS5jIVfFzq","name":"Photo 22"},{"id":"1SYiK_SGnY3McxpuRmL-SrFubj52PftxT","name":"Photo 25"},{"id":"1yFJvO6T4i-L9I3T7pkMX9Kpdt1-2tIum","name":"Photo 26"},{"id":"1lSQb5Ls1f-XLlSxEEUutHzSYcCM0iejG","name":"Photo 27"},{"id":"18R4m4seYBMhsgad2EphFsJN8IVvJnDN1","name":"Photo 28"},{"id":"1ppId9cn2p9-18Kg2AiI840xLLhZO_mdy","name":"Photo 29"},{"id":"11IxHW5Uc10eASb3zPdHlwz11zpqiWxA7","name":"Photo 30"},{"id":"1F0TM5K6hSeCYHFRUkOAk31Rulyyww6yB","name":"Photo 31"},{"id":"1FSuycPIBl_chN9jNu7MjBjR8AT5rXQfW","name":"Photo 32"},{"id":"14JBHmiyuNIzA-ALctKJsPmKytM72nZcg","name":"Photo 33"},{"id":"1aWzhEF2nicy5cA0KaN-kmRHVLHBtlTJt","name":"Photo 34"},{"id":"1z-LYzQx0X_nA97t_N7gmEOnYsPz2Ysnj","name":"Photo 35"},{"id":"1B9naVW9pyf--UZ1Sh6AIo8phI9C07CaC","name":"Photo 36"},{"id":"1r8F6MV0HLoqBpV4Y6IUoH5fW4tbGLanV","name":"Photo 37"},{"id":"1iSDIcflO8g3LzalBaD089E-lUDqklDtw","name":"Photo 38"},{"id":"1_DSM644FIMOCQoluZ8NRDVgTIqu-9_K4","name":"Photo 39"},{"id":"1ON_MmGd2DSgOe1pKNHnHUxOwnIBSETQP","name":"Photo 40"},{"id":"1a6JHD3zEeGtzo2W6J5yRbAVe-HRYMI4f","name":"Photo 41"},{"id":"1wbL8vOZd_Z4Qbdfbc80PwdutLJ6SxIjh","name":"Photo 42"},{"id":"1cc5uJnA6KPGl9A6zvhk3X3wH3RGm83Hs","name":"Photo 43"},{"id":"16RiOI4hzVMco2HeKB8h5SRG8uowiwVSO","name":"Photo 44"},{"id":"1yRgB_yzIz6EUQG1bnzyjUETyUIjyeY6P","name":"Photo 45"},{"id":"1jR9pFiNJDKkBmwKAmbj-agTgQ3onxKgr","name":"Photo 46"},{"id":"1onDFt5Ya-5ilHwnJjfZ_Lsyz99A6ZKXL","name":"Photo 47"},{"id":"1tahnJpPDrzmM7N9ZSXT5poYFiuwXcWMC","name":"Photo 48"},{"id":"174DHMxGUVx3oX3c9InhIWs16LgZeP8xV","name":"Photo 49"},{"id":"1PE-9ztGo1sOKB1WRor-43cUSqdoO8xS3","name":"Photo 50"},{"id":"1JyFYWqz11cDi2Z6VGNIUCdq6NLkP7cJZ","name":"Photo 51"},{"id":"14hdgWqLmA7dKJgPklqd9cAX6AvjSlacS","name":"Photo 52"},{"id":"1oiZia7oj2Ds1vnlLwkNa2OA6IeobJv0N","name":"Photo 53"},{"id":"1Nsm2i0a3XmzzZ1BbqQwprhFApw_biIQS","name":"Photo 54"},{"id":"13ngN4MmNUyM_n3lApl-0t_tQG_dKaKI4","name":"Photo 55"},{"id":"1y5xOFgK5yB4ADHgDS1Rbzj9nJmsI5rHP","name":"Photo 56"},{"id":"10HWFTBXu5kLjC_uH4EkUVU0B023tWIwe","name":"Photo 57"},{"id":"1lMBQMaRGBzI9YtD6Z-D8UEijyjL25sve","name":"Photo 58"},{"id":"1NYsAzgm98H-D8qRROmJ5GEKnXXiUzYi7","name":"Photo 59"},{"id":"1IwQ0abnwI9CMjhfyDy905Xd52ro1oXYo","name":"Photo 60"},{"id":"1YGFj6hAo8UaqZlZvwz1nN93QC9en5sLG","name":"Photo 61"},{"id":"17LLTHOjuCLSQmXmIfttWB2PIh9wb0F9N","name":"Photo 62"},{"id":"1rV1K3iuEYoq0QA5Yigcs3YrZC3HNmGUq","name":"Photo 63"},{"id":"1-nZtUU8lxR_L5cB9cVVVHkYmdyIDm5fd","name":"Photo 64"},{"id":"1x4UY3uLLUFybgxowza_e2U-nTa9JLhCV","name":"Photo 65"},{"id":"1LP-KBVeNrmrfQY8LERic0SRKnf-syhPa","name":"Photo 66"},{"id":"1CZLJGya2G_xE_NXKX4FLs1bAoqyAEvKo","name":"Photo 67"},{"id":"1U5AmWEINOnngEeLobdUYrZ8XQGSTeyrp","name":"Photo 68"},{"id":"1I07Psv7QGLFWYqCwE79-9xQm0VVnpqkN","name":"Photo 69"},{"id":"1rvzSujL01Tb-mD4JkQ4DGt5g0lQUwccj","name":"Photo 70"},{"id":"1k-v3yNVH8ptp04eEcFo5LkTYPyEt9L6S","name":"Photo 71"},{"id":"1c7cPOmOO7P0afCVZzYWB0qnlpfOsEQvl","name":"Photo 72"}]}].find(c => c.label === tab);
+  return cam ? cam.photos : [];
+}
+
+function init() {
+  updateLikeCount();
+  renderGallery();
+  lucide.createIcons();
+  document.addEventListener('click', (e) => {
+    const menu = document.getElementById('download-menu');
+    if (!e.target.closest('#download-trigger') && menu && !menu.classList.contains('hidden') && !menu.contains(e.target)) {
+      menu.classList.add('hidden');
+      menu.classList.remove('flex');
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    const lb = document.getElementById('lightbox');
+    if (!lb.classList.contains('hidden')) {
+      if (e.key === 'ArrowLeft') changePhoto(-1);
+      if (e.key === 'ArrowRight') changePhoto(1);
+      if (e.key === 'Escape') closeLightbox();
+    }
+  });
+}
+
+function renderGallery() {
+  const grid = document.getElementById('photo-grid');
+  const images = getTabData(currentTab);
+  if (!images || images.length === 0) {
+    grid.innerHTML = '<div style="grid-column:1/-1;padding:5rem;text-align:center;color:#d1d5db;font-size:0.75rem;letter-spacing:0.2em;">NO PHOTOS IN THIS TAB YET</div>';
+    return;
+  }
+  if (isSelectionMode) {
+    grid.innerHTML = images.map((img, idx) => `
+      <div class="gallery-item cursor-pointer overflow-hidden group relative" onclick="toggleSelection('${img.id}')">
+        <img src="${getDriveUrl(img.id)}" class="w-full h-auto object-cover ${selectedPhotos.has(img.id)?'opacity-80':''}" onerror="this.src='https://via.placeholder.com/400x500?text=Loading'">
+        <div class="absolute inset-0 bg-black/10 ${selectedPhotos.has(img.id)?'opacity-100':'opacity-0'}"></div>
+        <div class="absolute top-3 right-3 z-20">
+          <div class="checkbox-ring ${selectedPhotos.has(img.id)?'selected':''}">
+            ${selectedPhotos.has(img.id)?'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>':''}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } else {
+    grid.innerHTML = images.map((img, idx) => `
+      <div class="gallery-item cursor-pointer overflow-hidden group relative" onclick="openLightbox(${idx})">
+        <img src="${getDriveUrl(img.id)}" class="w-full h-auto object-cover transition-opacity duration-500 group-hover:opacity-90" loading="lazy" onerror="this.src='https://via.placeholder.com/400x500?text=Loading'">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+        <div class="absolute bottom-4 right-4 flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-10">
+          <button onclick="event.stopPropagation();shareImageDirect('${img.id}')" class="text-white"><i data-lucide="share" class="w-5 h-5"></i></button>
+          <button onclick="event.stopPropagation();downloadImage('${img.id}')" class="text-white"><i data-lucide="download" class="w-5 h-5"></i></button>
+          <button onclick="event.stopPropagation();toggleLike('${img.id}')" class="text-white hover:text-red-500"><i data-lucide="heart" class="w-5 h-5 ${likedPhotos.has(img.id)?'liked':''}"></i></button>
+        </div>
+      </div>
+    `).join('');
+  }
+  lucide.createIcons();
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach(b => { b.classList.remove('tab-active','text-zinc-900'); b.classList.add('text-zinc-400'); });
+  if(tab==='CAM 01'){document.getElementById('tab-0').classList.add('tab-active','text-zinc-900');document.getElementById('tab-0').classList.remove('text-zinc-400');}
+  const cams = [{"id":"cam02","label":"CAM 01","photos":[{"id":"1ut9meO0lDt3HZq2BLBTV8gVM3l3mIYNe","name":"Photo 01"},{"id":"1NpYP9onsxJHcAxN8kpMG-hsXyGZhQN0l","name":"Photo 02"},{"id":"1q_6iRghTQrke7sSvKmr1k4RT32urhRx9","name":"Photo 03"},{"id":"1BzwmShXUDVnBdLsQLvSxsJS7sChrykuU","name":"Photo 04"},{"id":"1zl0_aNwmn7TjC88L_pYAs040yIKPLudz","name":"Photo 05"},{"id":"1Q4lAAP0umSh9InNJpiiokpQ7kRQ6ynVL","name":"Photo 06"},{"id":"1CeMWDe4356aRW1wj08wyNQBgpQRbm09R","name":"Photo 07"},{"id":"1uNiFa3jMyUmVE25yoLvzWXrqhleFSA2d","name":"Photo 08"},{"id":"1We2qSmGhL0EEpz8oH2XjW2qm8FuJACgQ","name":"Photo 09"},{"id":"1PR8GgGXcM3Uh3rBrC7pR6esbO0FA4E7r","name":"Photo 10"},{"id":"1DelfeoPx-uz8mPmJZ-Kouwyjeu0vs7XA","name":"Photo 11"},{"id":"179-7-cnBDYdL8VDyyPGMo8R_NdIrunkp","name":"Photo 12"},{"id":"1Ygw9Gc1F2sjgoR2Cy-C8u0HBpcHKV6yf","name":"Photo 13"},{"id":"1hM22-yuGkSWpRnb4kP43HMjnbi9xU2cD","name":"Photo 14"},{"id":"14ZcDQqvW70J2uwSCwcSzeghh7hU8_kKO","name":"Photo 15"},{"id":"1BmIN6LKX3Fes9LXz3Ld0LtqScd59Rxoh","name":"Photo 16"},{"id":"1n8SA_bUaBrT4vfuH0Lv2d85QzVuurGf7","name":"Photo 17"},{"id":"158nQtkKljpog9PwOYuABx7z8YiLzGKFX","name":"Photo 18"},{"id":"1F0h_bBRim0SFtRFPt9p45_UZI9q8eud2","name":"Photo 19"},{"id":"1g0fgfWCG7ybNBvk2VUsQj8dNw4qSujYK","name":"Photo 20"},{"id":"1VuHhESomfVf7aEPSGe-tIicQnICUm_1p","name":"Photo 21"},{"id":"1-osLMmQm4uMzdVVPAhGbNNAS5jIVfFzq","name":"Photo 22"},{"id":"1SYiK_SGnY3McxpuRmL-SrFubj52PftxT","name":"Photo 25"},{"id":"1yFJvO6T4i-L9I3T7pkMX9Kpdt1-2tIum","name":"Photo 26"},{"id":"1lSQb5Ls1f-XLlSxEEUutHzSYcCM0iejG","name":"Photo 27"},{"id":"18R4m4seYBMhsgad2EphFsJN8IVvJnDN1","name":"Photo 28"},{"id":"1ppId9cn2p9-18Kg2AiI840xLLhZO_mdy","name":"Photo 29"},{"id":"11IxHW5Uc10eASb3zPdHlwz11zpqiWxA7","name":"Photo 30"},{"id":"1F0TM5K6hSeCYHFRUkOAk31Rulyyww6yB","name":"Photo 31"},{"id":"1FSuycPIBl_chN9jNu7MjBjR8AT5rXQfW","name":"Photo 32"},{"id":"14JBHmiyuNIzA-ALctKJsPmKytM72nZcg","name":"Photo 33"},{"id":"1aWzhEF2nicy5cA0KaN-kmRHVLHBtlTJt","name":"Photo 34"},{"id":"1z-LYzQx0X_nA97t_N7gmEOnYsPz2Ysnj","name":"Photo 35"},{"id":"1B9naVW9pyf--UZ1Sh6AIo8phI9C07CaC","name":"Photo 36"},{"id":"1r8F6MV0HLoqBpV4Y6IUoH5fW4tbGLanV","name":"Photo 37"},{"id":"1iSDIcflO8g3LzalBaD089E-lUDqklDtw","name":"Photo 38"},{"id":"1_DSM644FIMOCQoluZ8NRDVgTIqu-9_K4","name":"Photo 39"},{"id":"1ON_MmGd2DSgOe1pKNHnHUxOwnIBSETQP","name":"Photo 40"},{"id":"1a6JHD3zEeGtzo2W6J5yRbAVe-HRYMI4f","name":"Photo 41"},{"id":"1wbL8vOZd_Z4Qbdfbc80PwdutLJ6SxIjh","name":"Photo 42"},{"id":"1cc5uJnA6KPGl9A6zvhk3X3wH3RGm83Hs","name":"Photo 43"},{"id":"16RiOI4hzVMco2HeKB8h5SRG8uowiwVSO","name":"Photo 44"},{"id":"1yRgB_yzIz6EUQG1bnzyjUETyUIjyeY6P","name":"Photo 45"},{"id":"1jR9pFiNJDKkBmwKAmbj-agTgQ3onxKgr","name":"Photo 46"},{"id":"1onDFt5Ya-5ilHwnJjfZ_Lsyz99A6ZKXL","name":"Photo 47"},{"id":"1tahnJpPDrzmM7N9ZSXT5poYFiuwXcWMC","name":"Photo 48"},{"id":"174DHMxGUVx3oX3c9InhIWs16LgZeP8xV","name":"Photo 49"},{"id":"1PE-9ztGo1sOKB1WRor-43cUSqdoO8xS3","name":"Photo 50"},{"id":"1JyFYWqz11cDi2Z6VGNIUCdq6NLkP7cJZ","name":"Photo 51"},{"id":"14hdgWqLmA7dKJgPklqd9cAX6AvjSlacS","name":"Photo 52"},{"id":"1oiZia7oj2Ds1vnlLwkNa2OA6IeobJv0N","name":"Photo 53"},{"id":"1Nsm2i0a3XmzzZ1BbqQwprhFApw_biIQS","name":"Photo 54"},{"id":"13ngN4MmNUyM_n3lApl-0t_tQG_dKaKI4","name":"Photo 55"},{"id":"1y5xOFgK5yB4ADHgDS1Rbzj9nJmsI5rHP","name":"Photo 56"},{"id":"10HWFTBXu5kLjC_uH4EkUVU0B023tWIwe","name":"Photo 57"},{"id":"1lMBQMaRGBzI9YtD6Z-D8UEijyjL25sve","name":"Photo 58"},{"id":"1NYsAzgm98H-D8qRROmJ5GEKnXXiUzYi7","name":"Photo 59"},{"id":"1IwQ0abnwI9CMjhfyDy905Xd52ro1oXYo","name":"Photo 60"},{"id":"1YGFj6hAo8UaqZlZvwz1nN93QC9en5sLG","name":"Photo 61"},{"id":"17LLTHOjuCLSQmXmIfttWB2PIh9wb0F9N","name":"Photo 62"},{"id":"1rV1K3iuEYoq0QA5Yigcs3YrZC3HNmGUq","name":"Photo 63"},{"id":"1-nZtUU8lxR_L5cB9cVVVHkYmdyIDm5fd","name":"Photo 64"},{"id":"1x4UY3uLLUFybgxowza_e2U-nTa9JLhCV","name":"Photo 65"},{"id":"1LP-KBVeNrmrfQY8LERic0SRKnf-syhPa","name":"Photo 66"},{"id":"1CZLJGya2G_xE_NXKX4FLs1bAoqyAEvKo","name":"Photo 67"},{"id":"1U5AmWEINOnngEeLobdUYrZ8XQGSTeyrp","name":"Photo 68"},{"id":"1I07Psv7QGLFWYqCwE79-9xQm0VVnpqkN","name":"Photo 69"},{"id":"1rvzSujL01Tb-mD4JkQ4DGt5g0lQUwccj","name":"Photo 70"},{"id":"1k-v3yNVH8ptp04eEcFo5LkTYPyEt9L6S","name":"Photo 71"},{"id":"1c7cPOmOO7P0afCVZzYWB0qnlpfOsEQvl","name":"Photo 72"}]}];
+  const idx = cams.findIndex(c => c.label === tab);
+  if (idx >= 0) document.getElementById('tab-'+idx)?.classList.add('tab-active','text-zinc-900');
+  document.getElementById('current-tab-name').textContent = tab;
+  renderGallery();
+}
+
+function openLightbox(index) {
+  if (isSelectionMode) return;
+  currentIndex = index;
+  const images = getTabData(currentTab);
+  document.getElementById('lb-img').src = getDriveUrl(images[index].id);
+  document.getElementById('lb-counter').textContent = (index+1) + ' / ' + images.length;
+  document.getElementById('lightbox').classList.remove('hidden');
+  document.getElementById('lightbox').classList.add('flex');
+  document.body.style.overflow = 'hidden';
+  updateLightboxHeart();
+  lucide.createIcons();
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.add('hidden');
+  document.getElementById('lightbox').classList.remove('flex');
+  document.body.style.overflow = '';
+  isZoomed = false;
+  document.getElementById('lb-img').classList.remove('zoom-active');
+}
+
+function changePhoto(dir) {
+  const images = getTabData(currentTab);
+  currentIndex = (currentIndex + dir + images.length) % images.length;
+  openLightbox(currentIndex);
+}
+
+function toggleZoom() {
+  isZoomed = !isZoomed;
+  document.getElementById('lb-img').classList.toggle('zoom-active', isZoomed);
+}
+
+function toggleLike(id) {
+  if (likedPhotos.has(id)) likedPhotos.delete(id); else likedPhotos.add(id);
+  localStorage.setItem('album_likes', JSON.stringify(Array.from(likedPhotos)));
+  updateLikeCount(); renderGallery(); updateLightboxHeart();
+}
+
+function toggleLikeCurrent() {
+  const images = getTabData(currentTab);
+  toggleLike(images[currentIndex].id);
+}
+
+function updateLikeCount() {
+  document.getElementById('like-count').textContent = likedPhotos.size;
+}
+
+function updateLightboxHeart() {
+  const images = getTabData(currentTab);
+  if (!images[currentIndex]) return;
+  const heartIcon = document.getElementById('lb-heart-btn').querySelector('svg');
+  if (heartIcon) {
+    if (likedPhotos.has(images[currentIndex].id)) heartIcon.classList.add('liked');
+    else heartIcon.classList.remove('liked');
+  }
+}
+
+function downloadImage(id) {
+  const a = document.createElement('a');
+  a.href = getDownloadUrl(id);
+  a.setAttribute('download', '');
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+function downloadCurrent() {
+  const images = getTabData(currentTab);
+  downloadImage(images[currentIndex].id);
+}
+
+function toggleDownloadMenu() {
+  const menu = document.getElementById('download-menu');
+  menu.classList.toggle('hidden');
+  menu.classList.toggle('flex');
+}
+
+function startSelectionMode() {
+  isSelectionMode = true; selectedPhotos.clear();
+  document.getElementById('download-menu').classList.add('hidden');
+  document.getElementById('download-menu').classList.remove('flex');
+  document.getElementById('chat-bubble').classList.add('hidden');
+  document.getElementById('selection-bar').classList.remove('translate-y-full');
+  document.getElementById('selection-instructions').classList.remove('hidden');
+  renderGallery();
+}
+
+function cancelSelectionMode() {
+  isSelectionMode = false; selectedPhotos.clear();
+  document.getElementById('selection-bar').classList.add('translate-y-full');
+  document.getElementById('selection-instructions').classList.add('hidden');
+  document.getElementById('chat-bubble').classList.remove('hidden');
+  renderGallery();
+}
+
+function toggleSelection(id) {
+  if (selectedPhotos.has(id)) selectedPhotos.delete(id); else selectedPhotos.add(id);
+  document.getElementById('selected-count').textContent = selectedPhotos.size;
+  renderGallery();
+}
+
+function selectAll() {
+  getTabData(currentTab).forEach(img => selectedPhotos.add(img.id));
+  document.getElementById('selected-count').textContent = selectedPhotos.size;
+  renderGallery();
+}
+
+function downloadSelectedBatch() {
+  if (selectedPhotos.size === 0) { alert('Select at least one photo.'); return; }
+  batchDownload(Array.from(selectedPhotos));
+}
+
+function downloadAllInTab() {
+  const images = getTabData(currentTab);
+  if (!images.length) { alert('No photos in this tab.'); return; }
+  if (confirm('Download all ' + images.length + ' images from ' + currentTab + '?')) {
+    batchDownload(images.map(img => img.id));
+  }
+  document.getElementById('download-menu').classList.add('hidden');
+  document.getElementById('download-menu').classList.remove('flex');
+}
+
+function batchDownload(ids) {
+  alert('Starting download for ' + ids.length + ' images. Allow pop-ups if blocked.');
+  let delay = 0;
+  ids.forEach(id => {
+    setTimeout(() => {
+      const a = document.createElement('a');
+      a.href = getDownloadUrl(id);
+      a.setAttribute('download','');
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    }, delay);
+    delay += 1000;
+  });
+}
+
+function filterLikes() {
+  if (likedPhotos.size === 0) { alert("You haven't liked any photos yet!"); return; }
+  const allCams = [{"id":"cam02","label":"CAM 01","photos":[{"id":"1ut9meO0lDt3HZq2BLBTV8gVM3l3mIYNe","name":"Photo 01"},{"id":"1NpYP9onsxJHcAxN8kpMG-hsXyGZhQN0l","name":"Photo 02"},{"id":"1q_6iRghTQrke7sSvKmr1k4RT32urhRx9","name":"Photo 03"},{"id":"1BzwmShXUDVnBdLsQLvSxsJS7sChrykuU","name":"Photo 04"},{"id":"1zl0_aNwmn7TjC88L_pYAs040yIKPLudz","name":"Photo 05"},{"id":"1Q4lAAP0umSh9InNJpiiokpQ7kRQ6ynVL","name":"Photo 06"},{"id":"1CeMWDe4356aRW1wj08wyNQBgpQRbm09R","name":"Photo 07"},{"id":"1uNiFa3jMyUmVE25yoLvzWXrqhleFSA2d","name":"Photo 08"},{"id":"1We2qSmGhL0EEpz8oH2XjW2qm8FuJACgQ","name":"Photo 09"},{"id":"1PR8GgGXcM3Uh3rBrC7pR6esbO0FA4E7r","name":"Photo 10"},{"id":"1DelfeoPx-uz8mPmJZ-Kouwyjeu0vs7XA","name":"Photo 11"},{"id":"179-7-cnBDYdL8VDyyPGMo8R_NdIrunkp","name":"Photo 12"},{"id":"1Ygw9Gc1F2sjgoR2Cy-C8u0HBpcHKV6yf","name":"Photo 13"},{"id":"1hM22-yuGkSWpRnb4kP43HMjnbi9xU2cD","name":"Photo 14"},{"id":"14ZcDQqvW70J2uwSCwcSzeghh7hU8_kKO","name":"Photo 15"},{"id":"1BmIN6LKX3Fes9LXz3Ld0LtqScd59Rxoh","name":"Photo 16"},{"id":"1n8SA_bUaBrT4vfuH0Lv2d85QzVuurGf7","name":"Photo 17"},{"id":"158nQtkKljpog9PwOYuABx7z8YiLzGKFX","name":"Photo 18"},{"id":"1F0h_bBRim0SFtRFPt9p45_UZI9q8eud2","name":"Photo 19"},{"id":"1g0fgfWCG7ybNBvk2VUsQj8dNw4qSujYK","name":"Photo 20"},{"id":"1VuHhESomfVf7aEPSGe-tIicQnICUm_1p","name":"Photo 21"},{"id":"1-osLMmQm4uMzdVVPAhGbNNAS5jIVfFzq","name":"Photo 22"},{"id":"1SYiK_SGnY3McxpuRmL-SrFubj52PftxT","name":"Photo 25"},{"id":"1yFJvO6T4i-L9I3T7pkMX9Kpdt1-2tIum","name":"Photo 26"},{"id":"1lSQb5Ls1f-XLlSxEEUutHzSYcCM0iejG","name":"Photo 27"},{"id":"18R4m4seYBMhsgad2EphFsJN8IVvJnDN1","name":"Photo 28"},{"id":"1ppId9cn2p9-18Kg2AiI840xLLhZO_mdy","name":"Photo 29"},{"id":"11IxHW5Uc10eASb3zPdHlwz11zpqiWxA7","name":"Photo 30"},{"id":"1F0TM5K6hSeCYHFRUkOAk31Rulyyww6yB","name":"Photo 31"},{"id":"1FSuycPIBl_chN9jNu7MjBjR8AT5rXQfW","name":"Photo 32"},{"id":"14JBHmiyuNIzA-ALctKJsPmKytM72nZcg","name":"Photo 33"},{"id":"1aWzhEF2nicy5cA0KaN-kmRHVLHBtlTJt","name":"Photo 34"},{"id":"1z-LYzQx0X_nA97t_N7gmEOnYsPz2Ysnj","name":"Photo 35"},{"id":"1B9naVW9pyf--UZ1Sh6AIo8phI9C07CaC","name":"Photo 36"},{"id":"1r8F6MV0HLoqBpV4Y6IUoH5fW4tbGLanV","name":"Photo 37"},{"id":"1iSDIcflO8g3LzalBaD089E-lUDqklDtw","name":"Photo 38"},{"id":"1_DSM644FIMOCQoluZ8NRDVgTIqu-9_K4","name":"Photo 39"},{"id":"1ON_MmGd2DSgOe1pKNHnHUxOwnIBSETQP","name":"Photo 40"},{"id":"1a6JHD3zEeGtzo2W6J5yRbAVe-HRYMI4f","name":"Photo 41"},{"id":"1wbL8vOZd_Z4Qbdfbc80PwdutLJ6SxIjh","name":"Photo 42"},{"id":"1cc5uJnA6KPGl9A6zvhk3X3wH3RGm83Hs","name":"Photo 43"},{"id":"16RiOI4hzVMco2HeKB8h5SRG8uowiwVSO","name":"Photo 44"},{"id":"1yRgB_yzIz6EUQG1bnzyjUETyUIjyeY6P","name":"Photo 45"},{"id":"1jR9pFiNJDKkBmwKAmbj-agTgQ3onxKgr","name":"Photo 46"},{"id":"1onDFt5Ya-5ilHwnJjfZ_Lsyz99A6ZKXL","name":"Photo 47"},{"id":"1tahnJpPDrzmM7N9ZSXT5poYFiuwXcWMC","name":"Photo 48"},{"id":"174DHMxGUVx3oX3c9InhIWs16LgZeP8xV","name":"Photo 49"},{"id":"1PE-9ztGo1sOKB1WRor-43cUSqdoO8xS3","name":"Photo 50"},{"id":"1JyFYWqz11cDi2Z6VGNIUCdq6NLkP7cJZ","name":"Photo 51"},{"id":"14hdgWqLmA7dKJgPklqd9cAX6AvjSlacS","name":"Photo 52"},{"id":"1oiZia7oj2Ds1vnlLwkNa2OA6IeobJv0N","name":"Photo 53"},{"id":"1Nsm2i0a3XmzzZ1BbqQwprhFApw_biIQS","name":"Photo 54"},{"id":"13ngN4MmNUyM_n3lApl-0t_tQG_dKaKI4","name":"Photo 55"},{"id":"1y5xOFgK5yB4ADHgDS1Rbzj9nJmsI5rHP","name":"Photo 56"},{"id":"10HWFTBXu5kLjC_uH4EkUVU0B023tWIwe","name":"Photo 57"},{"id":"1lMBQMaRGBzI9YtD6Z-D8UEijyjL25sve","name":"Photo 58"},{"id":"1NYsAzgm98H-D8qRROmJ5GEKnXXiUzYi7","name":"Photo 59"},{"id":"1IwQ0abnwI9CMjhfyDy905Xd52ro1oXYo","name":"Photo 60"},{"id":"1YGFj6hAo8UaqZlZvwz1nN93QC9en5sLG","name":"Photo 61"},{"id":"17LLTHOjuCLSQmXmIfttWB2PIh9wb0F9N","name":"Photo 62"},{"id":"1rV1K3iuEYoq0QA5Yigcs3YrZC3HNmGUq","name":"Photo 63"},{"id":"1-nZtUU8lxR_L5cB9cVVVHkYmdyIDm5fd","name":"Photo 64"},{"id":"1x4UY3uLLUFybgxowza_e2U-nTa9JLhCV","name":"Photo 65"},{"id":"1LP-KBVeNrmrfQY8LERic0SRKnf-syhPa","name":"Photo 66"},{"id":"1CZLJGya2G_xE_NXKX4FLs1bAoqyAEvKo","name":"Photo 67"},{"id":"1U5AmWEINOnngEeLobdUYrZ8XQGSTeyrp","name":"Photo 68"},{"id":"1I07Psv7QGLFWYqCwE79-9xQm0VVnpqkN","name":"Photo 69"},{"id":"1rvzSujL01Tb-mD4JkQ4DGt5g0lQUwccj","name":"Photo 70"},{"id":"1k-v3yNVH8ptp04eEcFo5LkTYPyEt9L6S","name":"Photo 71"},{"id":"1c7cPOmOO7P0afCVZzYWB0qnlpfOsEQvl","name":"Photo 72"}]}];
+  const allImages = allCams.flatMap(c => c.photos);
+  const faves = allImages.filter(img => likedPhotos.has(img.id));
+  const grid = document.getElementById('photo-grid');
+  grid.innerHTML = faves.map((img, idx) => `
+    <div class="gallery-item cursor-pointer overflow-hidden group" onclick="openLightboxFromFaves(${idx}, ${JSON.stringify(faves.map(i=>i.id))})">
+      <img src="${getDriveUrl(img.id)}" class="w-full h-auto object-cover">
+    </div>
+  `).join('');
+  document.getElementById('gallery-subtitle').textContent = 'MY FAVORITES';
+  lucide.createIcons();
+}
+
+function exportFavoritesCSV() {
+  if (likedPhotos.size === 0) { alert('Heart some photos first!'); return; }
+  const allCams = [{"id":"cam02","label":"CAM 01","photos":[{"id":"1ut9meO0lDt3HZq2BLBTV8gVM3l3mIYNe","name":"Photo 01"},{"id":"1NpYP9onsxJHcAxN8kpMG-hsXyGZhQN0l","name":"Photo 02"},{"id":"1q_6iRghTQrke7sSvKmr1k4RT32urhRx9","name":"Photo 03"},{"id":"1BzwmShXUDVnBdLsQLvSxsJS7sChrykuU","name":"Photo 04"},{"id":"1zl0_aNwmn7TjC88L_pYAs040yIKPLudz","name":"Photo 05"},{"id":"1Q4lAAP0umSh9InNJpiiokpQ7kRQ6ynVL","name":"Photo 06"},{"id":"1CeMWDe4356aRW1wj08wyNQBgpQRbm09R","name":"Photo 07"},{"id":"1uNiFa3jMyUmVE25yoLvzWXrqhleFSA2d","name":"Photo 08"},{"id":"1We2qSmGhL0EEpz8oH2XjW2qm8FuJACgQ","name":"Photo 09"},{"id":"1PR8GgGXcM3Uh3rBrC7pR6esbO0FA4E7r","name":"Photo 10"},{"id":"1DelfeoPx-uz8mPmJZ-Kouwyjeu0vs7XA","name":"Photo 11"},{"id":"179-7-cnBDYdL8VDyyPGMo8R_NdIrunkp","name":"Photo 12"},{"id":"1Ygw9Gc1F2sjgoR2Cy-C8u0HBpcHKV6yf","name":"Photo 13"},{"id":"1hM22-yuGkSWpRnb4kP43HMjnbi9xU2cD","name":"Photo 14"},{"id":"14ZcDQqvW70J2uwSCwcSzeghh7hU8_kKO","name":"Photo 15"},{"id":"1BmIN6LKX3Fes9LXz3Ld0LtqScd59Rxoh","name":"Photo 16"},{"id":"1n8SA_bUaBrT4vfuH0Lv2d85QzVuurGf7","name":"Photo 17"},{"id":"158nQtkKljpog9PwOYuABx7z8YiLzGKFX","name":"Photo 18"},{"id":"1F0h_bBRim0SFtRFPt9p45_UZI9q8eud2","name":"Photo 19"},{"id":"1g0fgfWCG7ybNBvk2VUsQj8dNw4qSujYK","name":"Photo 20"},{"id":"1VuHhESomfVf7aEPSGe-tIicQnICUm_1p","name":"Photo 21"},{"id":"1-osLMmQm4uMzdVVPAhGbNNAS5jIVfFzq","name":"Photo 22"},{"id":"1SYiK_SGnY3McxpuRmL-SrFubj52PftxT","name":"Photo 25"},{"id":"1yFJvO6T4i-L9I3T7pkMX9Kpdt1-2tIum","name":"Photo 26"},{"id":"1lSQb5Ls1f-XLlSxEEUutHzSYcCM0iejG","name":"Photo 27"},{"id":"18R4m4seYBMhsgad2EphFsJN8IVvJnDN1","name":"Photo 28"},{"id":"1ppId9cn2p9-18Kg2AiI840xLLhZO_mdy","name":"Photo 29"},{"id":"11IxHW5Uc10eASb3zPdHlwz11zpqiWxA7","name":"Photo 30"},{"id":"1F0TM5K6hSeCYHFRUkOAk31Rulyyww6yB","name":"Photo 31"},{"id":"1FSuycPIBl_chN9jNu7MjBjR8AT5rXQfW","name":"Photo 32"},{"id":"14JBHmiyuNIzA-ALctKJsPmKytM72nZcg","name":"Photo 33"},{"id":"1aWzhEF2nicy5cA0KaN-kmRHVLHBtlTJt","name":"Photo 34"},{"id":"1z-LYzQx0X_nA97t_N7gmEOnYsPz2Ysnj","name":"Photo 35"},{"id":"1B9naVW9pyf--UZ1Sh6AIo8phI9C07CaC","name":"Photo 36"},{"id":"1r8F6MV0HLoqBpV4Y6IUoH5fW4tbGLanV","name":"Photo 37"},{"id":"1iSDIcflO8g3LzalBaD089E-lUDqklDtw","name":"Photo 38"},{"id":"1_DSM644FIMOCQoluZ8NRDVgTIqu-9_K4","name":"Photo 39"},{"id":"1ON_MmGd2DSgOe1pKNHnHUxOwnIBSETQP","name":"Photo 40"},{"id":"1a6JHD3zEeGtzo2W6J5yRbAVe-HRYMI4f","name":"Photo 41"},{"id":"1wbL8vOZd_Z4Qbdfbc80PwdutLJ6SxIjh","name":"Photo 42"},{"id":"1cc5uJnA6KPGl9A6zvhk3X3wH3RGm83Hs","name":"Photo 43"},{"id":"16RiOI4hzVMco2HeKB8h5SRG8uowiwVSO","name":"Photo 44"},{"id":"1yRgB_yzIz6EUQG1bnzyjUETyUIjyeY6P","name":"Photo 45"},{"id":"1jR9pFiNJDKkBmwKAmbj-agTgQ3onxKgr","name":"Photo 46"},{"id":"1onDFt5Ya-5ilHwnJjfZ_Lsyz99A6ZKXL","name":"Photo 47"},{"id":"1tahnJpPDrzmM7N9ZSXT5poYFiuwXcWMC","name":"Photo 48"},{"id":"174DHMxGUVx3oX3c9InhIWs16LgZeP8xV","name":"Photo 49"},{"id":"1PE-9ztGo1sOKB1WRor-43cUSqdoO8xS3","name":"Photo 50"},{"id":"1JyFYWqz11cDi2Z6VGNIUCdq6NLkP7cJZ","name":"Photo 51"},{"id":"14hdgWqLmA7dKJgPklqd9cAX6AvjSlacS","name":"Photo 52"},{"id":"1oiZia7oj2Ds1vnlLwkNa2OA6IeobJv0N","name":"Photo 53"},{"id":"1Nsm2i0a3XmzzZ1BbqQwprhFApw_biIQS","name":"Photo 54"},{"id":"13ngN4MmNUyM_n3lApl-0t_tQG_dKaKI4","name":"Photo 55"},{"id":"1y5xOFgK5yB4ADHgDS1Rbzj9nJmsI5rHP","name":"Photo 56"},{"id":"10HWFTBXu5kLjC_uH4EkUVU0B023tWIwe","name":"Photo 57"},{"id":"1lMBQMaRGBzI9YtD6Z-D8UEijyjL25sve","name":"Photo 58"},{"id":"1NYsAzgm98H-D8qRROmJ5GEKnXXiUzYi7","name":"Photo 59"},{"id":"1IwQ0abnwI9CMjhfyDy905Xd52ro1oXYo","name":"Photo 60"},{"id":"1YGFj6hAo8UaqZlZvwz1nN93QC9en5sLG","name":"Photo 61"},{"id":"17LLTHOjuCLSQmXmIfttWB2PIh9wb0F9N","name":"Photo 62"},{"id":"1rV1K3iuEYoq0QA5Yigcs3YrZC3HNmGUq","name":"Photo 63"},{"id":"1-nZtUU8lxR_L5cB9cVVVHkYmdyIDm5fd","name":"Photo 64"},{"id":"1x4UY3uLLUFybgxowza_e2U-nTa9JLhCV","name":"Photo 65"},{"id":"1LP-KBVeNrmrfQY8LERic0SRKnf-syhPa","name":"Photo 66"},{"id":"1CZLJGya2G_xE_NXKX4FLs1bAoqyAEvKo","name":"Photo 67"},{"id":"1U5AmWEINOnngEeLobdUYrZ8XQGSTeyrp","name":"Photo 68"},{"id":"1I07Psv7QGLFWYqCwE79-9xQm0VVnpqkN","name":"Photo 69"},{"id":"1rvzSujL01Tb-mD4JkQ4DGt5g0lQUwccj","name":"Photo 70"},{"id":"1k-v3yNVH8ptp04eEcFo5LkTYPyEt9L6S","name":"Photo 71"},{"id":"1c7cPOmOO7P0afCVZzYWB0qnlpfOsEQvl","name":"Photo 72"}]}];
+  const allImages = allCams.flatMap(c => c.photos);
+  const faves = allImages.filter(img => likedPhotos.has(img.id));
+  const csv = 'Photo Name,Drive ID,Drive URL\n' + faves.map(img => 
+    `${img.name},${img.id},https://drive.google.com/file/d/${img.id}/view`
+  ).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'my-favorites-MCA_2023__25.csv';
+  a.click();
+}
+
+function openShareModal() {
+  const url = window.location.href;
+  const modal = document.getElementById('share-modal');
+  document.getElementById('share-url-input').value = url;
+  const enc = encodeURIComponent(url);
+  document.getElementById('share-wa').href = 'https://api.whatsapp.com/send?text=' + enc;
+  document.getElementById('share-tg').href = 'https://t.me/share/url?url=' + enc;
+  document.getElementById('share-fb').href = 'https://www.facebook.com/sharer/sharer.php?u=' + enc;
+  modal.classList.remove('hidden'); modal.classList.add('flex');
+  lucide.createIcons();
+}
+
+function shareImageDirect(id) {
+  const url = 'https://lh3.googleusercontent.com/d/' + id;
+  const modal = document.getElementById('share-modal');
+  document.getElementById('share-url-input').value = url;
+  const enc = encodeURIComponent(url);
+  document.getElementById('share-wa').href = 'https://api.whatsapp.com/send?text=' + enc;
+  document.getElementById('share-tg').href = 'https://t.me/share/url?url=' + enc;
+  document.getElementById('share-fb').href = 'https://www.facebook.com/sharer/sharer.php?u=' + enc;
+  modal.classList.remove('hidden'); modal.classList.add('flex');
+  lucide.createIcons();
+}
+
+function closeShareModal(e) {
+  if (e && e.target !== document.getElementById('share-modal')) return;
+  document.getElementById('share-modal').classList.add('hidden');
+  document.getElementById('share-modal').classList.remove('flex');
+}
+
+function copyShareLink() {
+  const val = document.getElementById('share-url-input').value;
+  navigator.clipboard.writeText(val).then(() => {
+    document.getElementById('copy-btn-text').textContent = 'Copied!';
+    setTimeout(() => { document.getElementById('copy-btn-text').textContent = 'Copy Link'; }, 2000);
+  });
+}
+
+function openContactModal() {
+  const modal = document.getElementById('contact-modal');
+  modal.classList.remove('hidden'); modal.classList.add('flex');
+  lucide.createIcons();
+}
+
+function closeContactModal(e) {
+  if (e && e.target !== document.getElementById('contact-modal')) return;
+  document.getElementById('contact-modal').classList.add('hidden');
+  document.getElementById('contact-modal').classList.remove('flex');
+}
+
+function saveContact() {
+  const vCard = 'BEGIN:VCARD\nVERSION:3.0\nFN:SanStudio\nTITLE:Event Photography\nTEL;TYPE=CELL:+91 9003356047\nEMAIL:arussanthosh@gmail.com\nURL:https://sanstudio-hub.github.io/in/\nEND:VCARD';
+  const blob = new Blob([vCard], { type: 'text/vcard' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'SanStudio.vcf';
+  a.click();
+}
+
+function toggleDarkMode() {
+  document.body.classList.toggle('dark');
+  const isDark = document.body.classList.contains('dark');
+  localStorage.setItem('dark_mode', isDark);
+  const icon = document.getElementById('dark-icon');
+  if (icon) {
+    icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+    lucide.createIcons();
+  }
+}
+
+
+
+window.onload = function() {
+  init();
+  if (localStorage.getItem('dark_mode') === 'true') {
+    document.body.classList.add('dark');
+    const icon = document.getElementById('dark-icon');
+    if (icon) { icon.setAttribute('data-lucide','sun'); lucide.createIcons(); }
+  }
+};
+</script>
+</body>
+</html>
